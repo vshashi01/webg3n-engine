@@ -145,7 +145,7 @@ func NewSegmentedBox(width, height, length float32, widthSegments, heightSegment
 	box.boundingBoxValid = true
 
 	// Update bounding sphere
-	box.boundingSphere.Radius = math32.Sqrt(math32.Pow(width/2,2) + math32.Pow(height/2,2) + math32.Pow(length/2,2))
+	box.boundingSphere.Radius = math32.Sqrt(math32.Pow(width/2, 2) + math32.Pow(height/2, 2) + math32.Pow(length/2, 2))
 	box.boundingSphereValid = true
 
 	// Update area
@@ -155,6 +155,25 @@ func NewSegmentedBox(width, height, length float32, widthSegments, heightSegment
 	// Update volume
 	box.volume = width * height * length
 	box.volumeValid = true
+
+	return box
+}
+
+// NewPositionedBox creates a box geometry of the at a specified position of the center
+// of segments in each dimension. This is the Box constructor with most tunable parameters.
+func NewPositionedBox(width, height, length, x, y, z float32) *Box {
+
+	box := NewSegmentedBox(width, height, length, 1, 1, 1)
+
+	transform := math32.NewMatrix4()
+	transform.Set(
+		1, 0, 0, x/2,
+		0, 1, 0, y/2,
+		0, 0, 1, z/2,
+		1, 1, 1, 1,
+	)
+
+	box.ApplyMatrix(transform)
 
 	return box
 }
